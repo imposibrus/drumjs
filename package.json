@@ -1,0 +1,37 @@
+{
+  "name": "drumjs",
+  "version": "0.0.1",
+  "description": "A port of drumjs library",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "karma start karma.conf.js",
+    "test-single-run": "karma start karma.conf.js  --single-run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bkozera/drumjs.git"
+  },
+  "keywords": [
+    "selector",
+    "picker"
+  ],
+  "author": "Bartek Kozera",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bkozera/drumjs/issues"
+  },
+  "homepage": "https://github.com/bkozera/drumjs#readme",
+  "devDependencies": {
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^0.2.3",
+    "karma-firefox-launcher": "^0.1.7",
+    "karma-jasmine": "^0.3.8",
+    "karma-junit-reporter": "^0.4.2",
+    "karma-safari-launcher": "^0.1.1"
+  }
+}
