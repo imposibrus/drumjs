@@ -10,7 +10,7 @@ div.drum-wrapper {
 }
 div.drum-wrapper .inner {
 	position: relative;
-	overflow: hidden;
+	
 }
 div.drum-wrapper div.container {
 	position: absolute;
@@ -94,7 +94,7 @@ div.drum figure {
 	-o-backface-visibility: hidden;
 	backface-visibility: hidden;
 	display: block;
-	position: absolute;
+	
 	left: 0px;
 	top: 0px;
 	line-height: 20px;
