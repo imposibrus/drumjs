@@ -7,6 +7,9 @@
     -ms-user-select:none;
     user-select:none;
     width: 30px;
+    height: 120px;
+	overflow: hidden;
+	cursor: pointer;
 }
 .drum-wrapper .container {
 	position: absolute;
@@ -16,10 +19,6 @@
 	
 }
 
-.drum-wrapper {
-	height: 120px;
-	overflow: hidden;
-}
 
 /* actual drum styles */
 .drum {
