@@ -11,7 +11,7 @@
 	overflow: hidden;
 	cursor: pointer;
 }
-.drum-wrapper .container {
+.drum-wrapper .drum-container {
 	position: absolute;
 	width: 100%;
 	top: 48px;
@@ -54,7 +54,7 @@
 	opacity: 1;
 }
 
-.drum-wrapper .container, .drum-wrapper figure {
-	height: 25px;
-	line-height: 25px;
+.drum-wrapper .drum-container, .drum-wrapper figure {
+	height: 1.6em;
+	line-height: 1.6em;
 }
