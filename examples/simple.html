@@ -18,11 +18,29 @@
     div.drum figure {
         text-align: center;
     }
+
+    #cords {
+        position: fixed;
+        right:20px;
+        top:20px;
+        font-size: 36px;
+    }
+    #mouseCursor {
+        position: fixed;
+        top:0;
+        left:0;
+        border-radius: 50%;
+        opacity: 0.4;
+        width: 20px;
+        height: 20px;
+        background-color: red;
+    }
     </style>
 </head>
 
 <body>
-    <h1>DrumJS Simple Example</h1>
+    <div id="cords"></div>
+    <div id="mouseCursor"></div>   
     <select>
         <option value="0">00</option>
         <option value="1">01</option>
@@ -88,9 +106,18 @@
     <script>        
         var drumjs = new Drum(document.querySelector('select'), {
             onChange: function(e){
-                console.log(e.value);
+                console.log('value changed to:', e.value);
             }
         });
+
+        var cords = document.getElementById('cords');
+        var mouseCursor = document.getElementById('mouseCursor');
+
+        document.onmousemove = function(e){
+            cords.innerText = e.pageX + ' : ' + e.pageY;
+            mouseCursor.style.top = e.pageY - 10;
+            mouseCursor.style.left = e.pageX - 10;
+        }
 
         
 
