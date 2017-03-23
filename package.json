@@ -2,7 +2,11 @@
   "name": "drumjs",
   "version": "0.0.1",
   "description": "A port of drumjs library",
-  "main": "index.js",
+  "main": [
+    "lib/drum.min.css",
+    "contrib/hammerjs/hammer.min.js",
+    "lib/drum.js"
+  ],
   "directories": {
     "doc": "docs",
     "example": "examples"
