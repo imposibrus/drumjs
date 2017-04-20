@@ -67,10 +67,10 @@
         container.appendChild(drum);
 
         if (settings.interactive === true){
-            var dialUp = DrumIcon.up(settings);
+            var dialUp = Drum.DrumIcon.up(settings);
             wrapper.appendChild(dialUp);
 
-            var dialDown = DrumIcon.down(settings);
+            var dialDown = Drum.DrumIcon.down(settings);
             wrapper.appendChild(dialDown);
 
             wrapper.addEventListener("mouseover", function(){
