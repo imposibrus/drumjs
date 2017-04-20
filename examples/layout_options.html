@@ -3,14 +3,9 @@
 	<meta charset='utf-8'>
 	<meta id="viewport" name="viewport" content ="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />	
 	<title>Layout Options Test</title>
-	<script src="../contrib/jquery-1.9.1.js"></script>
-
-	<script src="../contrib/hammerjs/hammer.min.js"></script>
-	<script src="../contrib/hammerjs/hammer.fakemultitouch.js"></script>
-
-	<link rel="stylesheet" href="../lib/drum.css"></link>
-	<script src="../lib/drum.js"></script>
-
+	<link rel="stylesheet" href="../dist/drum.css">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="../dist/drum.js"></script>
 	<style media="screen">
 		body {
 			background-color: #fefefe;
@@ -92,11 +87,10 @@
 		}
 	</style>
 	<script>
-		Hammer.plugins.fakeMultitouch();
 		$(document).ready(function () {
-			$("#ABC").drum();
-			$("#number").drum({ panelCount: 20, dail_w: 35, dail_h: 10, dail_stroke_width: 2 });
-			$("#country").drum({ panelCount: 48, dail_w: 75, dail_h: 20, dail_stroke_color: '#810000', dail_stroke_width: 3 });
+			new Drum($("#ABC")[0]);
+			new Drum($("#number")[0], { panelCount: 20, dail_w: 35, dail_h: 10, dail_stroke_width: 2 });
+			new Drum($("#country")[0], { panelCount: 48, dail_w: 75, dail_h: 20, dail_stroke_color: '#810000', dail_stroke_width: 3 });
 		});
 	</script>
 </head>

@@ -3,14 +3,9 @@
 	<meta charset='utf-8'>
 	<meta id="viewport" name="viewport" content ="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />	
 	<title>DateTime Test</title>
-	<script src="../contrib/jquery-1.9.1.js"></script>
-
-	<script src="../contrib/hammerjs/hammer.min.js"></script>
-	<script src="../contrib/hammerjs/hammer.fakemultitouch.js"></script>
-
-	<link rel="stylesheet" href="../lib/drum.css"></link>
-	<script src="../lib/drum.js"></script>
-
+	<link rel="stylesheet" href="../dist/drum.css">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="../dist/drum.js"></script>
 	<style media="screen">
 		body {
 			background-color: #fefefe;
@@ -94,11 +89,9 @@
 		}
 	</style>
 	<script>
-		Hammer.plugins.fakeMultitouch();
-
 		function getIndexForValue(elem, value) {
 			for (var i=0; i<elem.options.length; i++)
-				if (elem.options[i].value == value)
+				if (elem.options[i].value === value)
 					return i;
 		}
 
@@ -110,30 +103,32 @@
 		}
 
 		function update(datetime) {
-			$("#date").drum('setIndex', datetime.getDate()-1); 
-			$("#month").drum('setIndex', datetime.getMonth()); 
-			$("#fullYear").drum('setIndex', getIndexForValue($("#fullYear")[0], datetime.getFullYear())); 
-			$("#hours").drum('setIndex', datetime.getHours()); 
-			$("#minutes").drum('setIndex', datetime.getMinutes()); 			
+			$("#date").data('drum').setIndex(datetime.getDate()-1);
+			$("#month").data('drum').setIndex(datetime.getMonth());
+			$("#fullYear").data('drum').setIndex(getIndexForValue($("#fullYear")[0], datetime.getFullYear()));
+			$("#hours").data('drum').setIndex(datetime.getHours());
+			$("#minutes").data('drum').setIndex(datetime.getMinutes());
 		}
 
 		$(document).ready(function () {
-			$("select.date").drum({
-				onChange : function (elem) {
-					var arr = {'date' : 'setDate', 'month' : 'setMonth', 'fullYear' : 'setFullYear', 'hours' : 'setHours', 'minutes' : 'setMinutes'};
-					var date = new Date();
-					for (var s in arr) {
-						var i = ($("form[name='date'] select[name='" + s + "']"))[0].value;
-						eval ("date." + arr[s] + "(" + i + ")");
-					}
-					date.setSeconds(0);
-					update(date);
+			$("select.date").each(function(idx,ele){
+			    $(ele).data('drum', new Drum(ele, {
+                    onChange : function (elem) {
+                        var arr = {'date' : 'setDate', 'month' : 'setMonth', 'fullYear' : 'setFullYear', 'hours' : 'setHours', 'minutes' : 'setMinutes'};
+                        var date = new Date();
+                        for (var s in arr) {
+                            var i = ($("form[name='date'] select[name='" + s + "']"))[0].value;
+                            eval ("date." + arr[s] + "(" + i + ")");
+                        }
+                        date.setSeconds(0);
+                        update(date);
 
-					var format = date.getFullYear() + '-' + pad( date.getMonth() + 1 ) + '-' + pad( date.getDate() ) + ' ' + pad( date.getHours() ) + ':' + pad( date.getMinutes() );
+                        var format = date.getFullYear() + '-' + pad( date.getMonth() + 1 ) + '-' + pad( date.getDate() ) + ' ' + pad( date.getHours() ) + ':' + pad( date.getMinutes() );
 
-					$('.date_header .selection').html(format);
-				}
-			});
+                        $('.date_header .selection').html(format);
+                    }
+                }));
+            });
 			update(new Date());
 		});
 	</script>
