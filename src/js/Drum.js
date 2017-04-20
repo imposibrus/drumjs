@@ -17,7 +17,7 @@
             dail_w: 20,
             dail_h: 5,
             dail_stroke_color: '#999999',
-            dail_stroke_width: 1
+            dail_stroke_width: 1,
         }
 
         for (var option in options){
@@ -26,7 +26,7 @@
         }
 
 
-        settings.transformProp = transformProp;
+        settings.transformProp = transformProp || 'transform';
         settings.rotation = 0;
         settings.distance = 0;
         settings.last_angle = 0;
