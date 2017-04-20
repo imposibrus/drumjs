@@ -1,6 +1,9 @@
 /**
- * Created by Keith on 4/19/2017.
+ * Copyright (c) 2013 Marcel Bretschneider <marcel.bretschneider@gmail.com>;
+ * Copyright (c) 2017 Keith Maika <keithm@kickenscripts.us>;
+ * Licensed under the MIT license
  */
+
 
 (function(){
     var svgelem = function(tagName){
@@ -27,8 +30,8 @@
         var p = svgelem("path");
         var styles = {
             "fill": "none",
-            "stroke": settings.dail_stroke_color,
-            "stroke-width": settings.dail_stroke_width + "px",
+            "stroke": settings.dial_stroke_color,
+            "stroke-width": settings.dial_stroke_width + "px",
             "stroke-linecap": "butt",
             "stroke-linejoin": "miter",
             "stroke-opacity": "1"
@@ -42,14 +45,14 @@
 
     this.Drum.DrumIcon = {
         up: function(settings){
-            var width = settings.dail_w;
-            var height = settings.dail_h;
+            var width = settings.dial_w;
+            var height = settings.dial_h;
 
             var svg = svgcanvas(width, height);
             var p = path(settings);
 
             p.setAttribute("d",
-                "m0," + (height + settings.dail_stroke_width) + "l" + (width / 2) + ",-" + height + "l" + (width / 2) + "," + height);
+                "m0," + (height + settings.dial_stroke_width) + "l" + (width / 2) + ",-" + height + "l" + (width / 2) + "," + height);
             svg.firstChild.appendChild(p);
 
             var cont = container("dial up");
@@ -57,14 +60,14 @@
             return cont;
         },
         down: function(settings){
-            var width = settings.dail_w;
-            var height = settings.dail_h;
+            var width = settings.dial_w;
+            var height = settings.dial_h;
 
             var svg = svgcanvas(width, height);
             var p = path(settings);
 
             p.setAttribute("d",
-                "m0,-" + settings.dail_stroke_width + "l" + (width / 2) + "," + height + "l" + (width / 2) + ",-" + height);
+                "m0,-" + settings.dial_stroke_width + "l" + (width / 2) + "," + height + "l" + (width / 2) + ",-" + height);
             svg.firstChild.appendChild(p);
 
             var cont = container("dial down");

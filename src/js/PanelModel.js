@@ -1,6 +1,10 @@
 /**
- * Created by Keith on 4/19/2017.
+ * Copyright (c) 2013 Marcel Bretschneider <marcel.bretschneider@gmail.com>;
+ * Copyright (c) 2017 Keith Maika <keithm@kickenscripts.us>;
+ * Licensed under the MIT license
  */
+
+
 (function(){
     function PanelModel(index, data_index, settings){
         this.index = index;
@@ -25,7 +29,7 @@
             this.elem.innerHTML = this.dataModel.getText();
         };
         this.update = function(data_index){
-            if (this.dataModel.index != data_index){
+            if (this.dataModel.index !== data_index){
                 this.dataModel.index = data_index;
                 this.setText();
             }
