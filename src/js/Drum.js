@@ -222,10 +222,6 @@
             }
         }
 
-        , _transform: function(fire_event){
-            //this._applyTransform(this.drum, this.settings.rotation);
-        }
-
         , _configureHammer: function(){
             var pan = new Hammer.Pan({
                 direction: Hammer.DIRECTION_VERTICAL
