@@ -62,7 +62,7 @@
                 rotateFn: 'rotateX',
                 interactive: true,
                 dial_w: 20,
-                dial_h: 5,
+                dial_h: 10,
                 dial_stroke_color: '#999999',
                 dial_stroke_width: 1,
                 index: this.element.selectedIndex
@@ -109,7 +109,7 @@
         }
 
         , _render: function(){
-            var wrapper, inner, container, dialUp, dialDown, drum;
+            var wrapper, inner, container, drum;
 
             this.element.style.display = "none";
             this.wrapper = wrapper = document.createElement("div");
@@ -136,11 +136,7 @@
             container.appendChild(drum);
 
             if (this.settings.interactive === true){
-                this.dialUp = dialUp = Drum.DrumIcon.up(this.settings);
-                wrapper.appendChild(dialUp);
-
-                this.dialDown = dialDown = Drum.DrumIcon.down(this.settings);
-                wrapper.appendChild(dialDown);
+                this._createDialButtons();
             }
 
             this.element.parentNode.insertBefore(wrapper, this.element.nextSibling);
@@ -153,6 +149,19 @@
             }
 
             this._applyTransformations();
+        }
+
+        , _createDialButtons: function(){
+            var width = this.settings.dial_w;
+            var height = this.settings.dial_h;
+            var color = this.settings.dial_stroke_color;
+            var thickness = this.settings.dial_stroke_width;
+
+            this.dialUp = Drum.UpButton(width, height, color, thickness);
+            this.wrapper.appendChild(this.dialUp);
+
+            this.dialDown = Drum.DownButton(width, height, color, thickness);
+            this.wrapper.appendChild(this.dialDown);
         }
 
         , _calculateTotalWedges: function(){
@@ -222,10 +231,6 @@
             }
         }
 
-        , _transform: function(fire_event){
-            //this._applyTransform(this.drum, this.settings.rotation);
-        }
-
         , _configureHammer: function(){
             var pan = new Hammer.Pan({
                 direction: Hammer.DIRECTION_VERTICAL
@@ -287,73 +292,98 @@
 
 
 (function(){
-    var svgelem = function(tagName){
-        return document.createElementNS("http://www.w3.org/2000/svg", tagName);
-    };
-    var svgcanvas = function(width, height){
-        var svg = svgelem("svg");
-        svg.setAttribute("width", width);
-        svg.setAttribute("height", height);
+    function SVG(width, height){
+        this._createSVGCanvas(width, height);
+    }
 
-        var g = svgelem("g");
-        svg.appendChild(g);
+    SVG.prototype = {
+        getElement: function(){
+            return this.element;
+        }
 
-        return svg;
+        , line: function(p1, p2, color, thickness, cap){
+            var line = this._createSVGElement('line');
+            line.setAttribute('stroke', color);
+            line.setAttribute('stroke-width', thickness);
+            line.setAttribute('stroke-linecap', cap);
+
+            line.setAttribute('x1', p1.x);
+            line.setAttribute('y1', p1.y);
+
+            line.setAttribute('x2', p2.x);
+            line.setAttribute('y2', p2.y);
+
+            this.graphics.appendChild(line);
+        }
+
+        , _createSVGElement: function(name){
+            return document.createElementNS("http://www.w3.org/2000/svg", name);
+        }
+
+        , _createSVGCanvas: function(width, height){
+            this.element = this._createSVGElement("svg");
+            this.element.setAttribute("width", width);
+            this.element.setAttribute("height", height);
+
+            this.graphics = this._createSVGElement("g");
+            this.element.appendChild(this.graphics);
+        }
     };
-    var container = function(className){
-        var container = document.createElement("div");
-        container.setAttribute("class", className);
-        var inner = document.createElement("div");
-        container.appendChild(inner);
-        return container;
-    };
-    var path = function(settings){
-        var p = svgelem("path");
-        var styles = {
-            "fill": "none",
-            "stroke": settings.dial_stroke_color,
-            "stroke-width": settings.dial_stroke_width + "px",
-            "stroke-linecap": "butt",
-            "stroke-linejoin": "miter",
-            "stroke-opacity": "1"
+
+
+    this.Drum.DownButton = function(width, height, color, thickness){
+        var lowerCenter = {
+            x: width / 2
+            , y: height - thickness
         };
-        var style = "";
-        for (var i in styles){
-            p.setAttribute(i, styles[i]);
-        }
-        return p;
+
+        var upperRight = {
+            x: width
+            , y: thickness
+        };
+
+        var upperLeft = {
+            x: thickness
+            , y: thickness
+        };
+
+        var button = new SVG(width, height);
+        button.line(upperLeft, lowerCenter, color, thickness, 'round');
+        button.line(lowerCenter, upperRight, color, thickness, 'round');
+
+        var div = document.createElement('div');
+        div.classList.add('dial');
+        div.classList.add('down');
+        div.appendChild(button.getElement());
+
+        return div;
     };
 
-    this.Drum.DrumIcon = {
-        up: function(settings){
-            var width = settings.dial_w;
-            var height = settings.dial_h;
+    this.Drum.UpButton = function(width, height, color, thickness){
+        var upperCenter = {
+            x: width / 2
+            , y: thickness
+        };
 
-            var svg = svgcanvas(width, height);
-            var p = path(settings);
+        var lowerRight = {
+            x: width
+            , y: height - thickness
+        };
 
-            p.setAttribute("d",
-                "m0," + (height + settings.dial_stroke_width) + "l" + (width / 2) + ",-" + height + "l" + (width / 2) + "," + height);
-            svg.firstChild.appendChild(p);
+        var lowerLeft = {
+            x: thickness
+            , y: height - thickness
+        };
 
-            var cont = container("dial up");
-            cont.firstChild.appendChild(svg);
-            return cont;
-        },
-        down: function(settings){
-            var width = settings.dial_w;
-            var height = settings.dial_h;
+        var button = new SVG(width, height);
+        button.line(lowerLeft, upperCenter, color, thickness, 'round');
+        button.line(upperCenter, lowerRight, color, thickness, 'round');
 
-            var svg = svgcanvas(width, height);
-            var p = path(settings);
+        var div = document.createElement('div');
+        div.classList.add('dial');
+        div.classList.add('up');
+        div.appendChild(button.getElement());
 
-            p.setAttribute("d",
-                "m0,-" + settings.dial_stroke_width + "l" + (width / 2) + "," + height + "l" + (width / 2) + ",-" + height);
-            svg.firstChild.appendChild(p);
-
-            var cont = container("dial down");
-            cont.firstChild.appendChild(svg);
-            return cont;
-        }
+        return div;
     };
 }());

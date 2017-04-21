@@ -26,21 +26,14 @@
     left: 0;
     height: 48px;
     background-color: rgba(255, 255, 255, 0.7);
-    display: none; }
-    .drum-wrapper .dial div {
-      width: 20px;
-      height: 10px;
-      margin: 0 auto; }
+    display: none;
+    cursor: default; }
     .drum-wrapper .dial svg {
       position: absolute; }
-  .drum-wrapper .up {
+  .drum-wrapper .up, .drum-wrapper .up svg {
     top: 0; }
-    .drum-wrapper .up svg {
-      top: 2px; }
-  .drum-wrapper .down {
-    bottom: 0px; }
-    .drum-wrapper .down svg {
-      bottom: 2px; }
+  .drum-wrapper .down, .drum-wrapper .down svg {
+    bottom: 0; }
   .drum-wrapper .container, .drum-wrapper .drum-item {
     height: 25px;
     line-height: 25px; }

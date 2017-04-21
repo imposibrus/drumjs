@@ -62,7 +62,7 @@
                 rotateFn: 'rotateX',
                 interactive: true,
                 dial_w: 20,
-                dial_h: 5,
+                dial_h: 10,
                 dial_stroke_color: '#999999',
                 dial_stroke_width: 1,
                 index: this.element.selectedIndex
@@ -109,7 +109,7 @@
         }
 
         , _render: function(){
-            var wrapper, inner, container, dialUp, dialDown, drum;
+            var wrapper, inner, container, drum;
 
             this.element.style.display = "none";
             this.wrapper = wrapper = document.createElement("div");
@@ -136,11 +136,7 @@
             container.appendChild(drum);
 
             if (this.settings.interactive === true){
-                this.dialUp = dialUp = Drum.DrumIcon.up(this.settings);
-                wrapper.appendChild(dialUp);
-
-                this.dialDown = dialDown = Drum.DrumIcon.down(this.settings);
-                wrapper.appendChild(dialDown);
+                this._createDialButtons();
             }
 
             this.element.parentNode.insertBefore(wrapper, this.element.nextSibling);
@@ -153,6 +149,19 @@
             }
 
             this._applyTransformations();
+        }
+
+        , _createDialButtons: function(){
+            var width = this.settings.dial_w;
+            var height = this.settings.dial_h;
+            var color = this.settings.dial_stroke_color;
+            var thickness = this.settings.dial_stroke_width;
+
+            this.dialUp = Drum.UpButton(width, height, color, thickness);
+            this.wrapper.appendChild(this.dialUp);
+
+            this.dialDown = Drum.DownButton(width, height, color, thickness);
+            this.wrapper.appendChild(this.dialDown);
         }
 
         , _calculateTotalWedges: function(){

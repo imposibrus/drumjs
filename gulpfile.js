@@ -15,8 +15,7 @@ function logError(e){
 gulp.task('drum.js', function(){
     var files = [
         'src/js/Drum.js'
-        , 'src/js/DrumIcon.js'
-        , 'src/js/DrumItem.js'
+        , 'src/js/DrumButton.js'
     ];
 
     return gulp.src(files)
