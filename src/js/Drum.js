@@ -213,7 +213,7 @@
         }
 
         , _updateDrumItem: function(drumItem, item){
-            drumItem.textContent = item.label;
+            drumItem.textContent = (item || {}).label || '';
         }
 
         , _getDrumTransformation: function(radius, fn, degree){
