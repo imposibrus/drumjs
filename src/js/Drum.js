@@ -161,7 +161,7 @@
             var i;
             var items = [];
             var count = this.drum.children.length;
-            var midpoint = Math.floor(count/2);
+            var midpoint = Math.floor(count / 2);
 
             for (i = 0; i < midpoint; i++){
                 items.push(this._getItem(i + selectedIndex));
@@ -221,71 +221,26 @@
         }
 
         , _configureHammer: function(){
-            var v = 0,
-                interval,
-                isDragging;
-
-            var touch = new Hammer(this.wrapper, {
-                prevent_default: true,
-                no_mouseevents: true
+            var pan = new Hammer.Pan({
+                direction: Hammer.DIRECTION_VERTICAL
             });
 
-            touch.on("dragstart", (function(){
-                this.settings.distance = 0;
-                isDragging = true;
+            var manager = new Hammer.Manager(this.drum);
+            manager.add(pan);
 
-                if (!interval){
-                    interval = setInterval((function(){
+            var offset = 0;
+            manager.on('pan', (function(e){
+                var wedges = Math.floor((e.distance - offset) / this.settings.wedgeHeight);
+                if (wedges > 0){
+                    offset = e.distance;
+                    var newIndex = this.index + (e.velocity > 0?-wedges:wedges);
 
-                        this.settings.rotation = (this.settings.rotation + v + 360 ) % 360;
-
-                        if (!isDragging){
-                            v /= 1.03;
-                        } else {
-                            v /= 1.1;
-                        }
-
-                        if (!isDragging && Math.pow(v, 2) < 0.001){
-                            clearInterval(interval);
-                            interval = null;
-                        } else if (!isDragging && Math.pow(v,
-                                2) < .5 && Math.pow(this.settings.rotation - this._getNearest(),
-                                2) < .1){
-                            this.settings.rotation = this._getNearest();
-                            clearInterval(interval);
-                            interval = null;
-                            v = 0;
-                        }
-
-                        this._transform(true);
-                    }).bind(this), 20);
-                }
-            }).bind(this));
-
-            touch.on("drag", (function(e){
-                // var evt = ["up", "down"];
-                // if (evt.indexOf(e.gesture.direction) >= 0) {
-                // settings.rotation += Math.round(e.gesture.deltaY - settings.distance) * -1;
-                v += ( Math.round(e.gesture.deltaY - this.settings.distance) * -1 ) / 25;
-                // transform(true);
-                this.settings.distance = e.gesture.deltaY;
-                // }
-            }).bind(this));
-
-            touch.on("dragend", (function(){
-                isDragging = false;
-
-                var distance = this.settings.rotation - this._getNearest();
-
-                if (distance > 180){
-                    distance = 360 - distance;
+                    this.setIndex(newIndex);
                 }
 
-                if (Math.pow(v, 2) < .5){
-                    v = (distance) / -20;
+                if (e.isFinal){
+                    offset = 0;
                 }
-                // settings.rotation = getNearest();
-                // transform(true);
             }).bind(this));
         }
 
