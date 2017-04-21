@@ -24,11 +24,11 @@
             }
         }
 
-        this.setIndex(this.settings.index);
+        this.setIndex(this.settings.index, false);
     }
 
     Drum.prototype = {
-        setIndex: function(newIndex){
+        setIndex: function(newIndex, fireEvent){
             var max = this.settings.data.length;
             if (newIndex > max){
                 newIndex = newIndex % max;
@@ -38,11 +38,20 @@
 
             this.index = newIndex;
             this.updateDisplay();
-            this._sync();
+
+            if (fireEvent === undefined){
+                fireEvent = true;
+            }
+
+            this._sync(fireEvent);
         }
 
         , getIndex: function(){
             return this.index;
+        }
+
+        , getSelected: function(){
+            return this._getItem(this.index).value;
         }
 
         , updateDisplay: function(){
@@ -66,7 +75,8 @@
                 dial_h: 10,
                 dial_stroke_color: '#999999',
                 dial_stroke_width: 1,
-                index: this.element.selectedIndex
+                index: this.element.selectedIndex,
+                onChange: null
             };
 
             var key;
@@ -281,7 +291,7 @@
             }).bind(this));
         }
 
-        , _sync: function(){
+        , _sync: function(fireEvent){
             var selected = this._getItem(this.index);
             var value = selected.value;
 
@@ -289,6 +299,28 @@
                 value.selected = true;
             } else if (value instanceof HTMLElement){
                 value.classList.add('selected');
+            }
+
+            if (fireEvent){
+                this._fireChangeEvent(value);
+            }
+        }
+
+        , _fireChangeEvent: function(){
+            var event;
+            try {
+                event = new Event('change');
+            } catch (e){
+                event = document.createEvent('Event');
+                event.initEvent('change', true, false);
+            }
+
+            if (this.settings.onChange){
+                this.settings.onChange.call(this, event);
+            }
+
+            if (this.element.dispatchEvent){
+                this.element.dispatchEvent(event);
             }
         }
     };

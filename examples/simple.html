@@ -86,13 +86,25 @@
     <option value="58">58</option>
     <option value="59">59</option>
 </select>
+<p>The selected value is: <span id="display"></span></p>
 <script>
-    var drumjs = new Drum(document.getElementById('select'), {
+    var select = document.getElementById('select');
+    var display = document.getElementById('display');
+
+    var drumjs = new Drum(select, {
         dial_stroke_color: '#ff0000',
         dial_stroke_width: 3,
         radius: 96,
-        wedgeHeight: 20
+        wedgeHeight: 20,
+        onChange: function(e){
+            console.log(this.getSelected().value);
+        }
     });
+
+    select.addEventListener('change', function(){
+        display.textContent=select.value;
+    });
+
 </script>
 </body>
 
