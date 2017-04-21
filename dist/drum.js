@@ -5,17 +5,23 @@
  */
 
 (function(){
+    // From http://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
+    var isTouch = (('ontouchstart' in window) || (navigator.msMaxTouchPoints > 0));
+
     function Drum(element, options){
         this.element = element;
         this.settings = this._mergeSettings(options);
         this.transformProp = this._getTransformProperty();
         this._render();
 
-        if (typeof Hammer !== 'undefined'){
-            this._configureHammer();
-        }
+
         if (this.settings.interactive){
-            this._configureEvents();
+            var hasHammer = typeof Hammer !== 'undefined';
+            if (hasHammer && isTouch){
+                this._configureHammer();
+            } else {
+                this._configureEvents();
+            }
         }
 
         this.setIndex(this.settings.index);
