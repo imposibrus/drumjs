@@ -91,16 +91,7 @@
     var select = document.getElementById('select');
     var display = document.getElementById('display');
 
-    var drumjs = new Drum(select, {
-        dial_stroke_color: '#ff0000',
-        dial_stroke_width: 3,
-        radius: 96,
-        wedgeHeight: 20,
-        onChange: function(e){
-            console.log(this.getSelected().value);
-        }
-    });
-
+    new Drum(select);
     select.addEventListener('change', function(){
         display.textContent=select.value;
     });

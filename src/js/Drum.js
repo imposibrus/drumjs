@@ -67,7 +67,7 @@
         , _mergeSettings: function(options){
             options = options || {};
             var settings = {
-                radius: 75,
+                radius: 80,
                 wedgeHeight: 30,
                 rotateFn: 'rotateX',
                 interactive: true,
@@ -192,7 +192,8 @@
             for (i = 0; i < midpoint; i++){
                 items.push(this._getItem(i + selectedIndex));
             }
-            for (i = midpoint; i > 0; i--){
+
+            for (i = count - midpoint; i > 0; i--){
                 items.push(this._getItem(selectedIndex - i));
             }
 
