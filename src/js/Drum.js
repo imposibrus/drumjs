@@ -225,11 +225,7 @@
         }
 
         , _applyTransformations: function(){
-            this.drum.style[this.transformProp] = this._getDrumTransformation(
-                this.settings.radius
-                , this.settings.rotateFn
-                , 0
-            );
+            this._rotateDrum(0);
 
             var length = this.drum.children.length;
             var theta = 360 / length;
@@ -243,6 +239,14 @@
             }
         }
 
+        , _rotateDrum: function(angle){
+            this.drum.style[this.transformProp] = this._getDrumTransformation(
+                this.settings.radius
+                , this.settings.rotateFn
+                , angle
+            );
+        }
+
         , _configureHammer: function(){
             var pan = new Hammer.Pan({
                 direction: Hammer.DIRECTION_VERTICAL
@@ -251,18 +255,14 @@
             var manager = new Hammer.Manager(this.drum);
             manager.add(pan);
 
-            var offset = 0;
             manager.on('pan', (function(e){
-                var wedges = Math.floor((e.distance - offset) / this.settings.wedgeHeight);
-                if (wedges > 0){
-                    offset = e.distance;
-                    var newIndex = this.index + (e.velocity > 0?-wedges:wedges);
-
-                    this.setIndex(newIndex);
-                }
-
+                var theta = e.deltaY / this.settings.radius;
+                theta = (theta * 180) / Math.PI;
+                this._rotateDrum(theta);
                 if (e.isFinal){
-                    offset = 0;
+                    var wedges = -Math.round(e.deltaY / this.settings.wedgeHeight);
+                    this.setIndex(this.index + wedges);
+                    this._rotateDrum(0);
                 }
             }).bind(this));
         }
