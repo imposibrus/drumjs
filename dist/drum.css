@@ -41,7 +41,7 @@
     bottom: 0px; }
     .drum-wrapper .down svg {
       bottom: 2px; }
-  .drum-wrapper .container, .drum-wrapper figure {
+  .drum-wrapper .container, .drum-wrapper .drum-item {
     height: 25px;
     line-height: 25px; }
 
@@ -65,7 +65,7 @@
   -moz-transform-style: preserve-3d;
   -o-transform-style: preserve-3d;
   transform-style: preserve-3d; }
-  .drum figure {
+  .drum .drum-item {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;

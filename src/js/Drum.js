@@ -8,10 +8,8 @@
     function Drum(element, options){
         this.element = element;
         this.settings = this._mergeSettings(options);
+        this.transformProp = this._getTransformProperty();
         this._render();
-
-        this.settings.radius = Math.round((this.drum.offsetHeight / 2) / Math.tan(Math.PI / this.settings.panelCount));
-        this._renderData();
 
         if (typeof Hammer !== 'undefined'){
             this._configureHammer();
@@ -19,47 +17,49 @@
         if (this.settings.interactive){
             this._configureEvents();
         }
+
+        this.setIndex(this.settings.index);
     }
 
     Drum.prototype = {
         setIndex: function(newIndex){
-            if (newIndex === this.getIndex()){
-                this._transform(false);
-                return;
+            var max = this.settings.data.length;
+            if (newIndex > max){
+                newIndex = newIndex % max;
+            } else if (newIndex < 0){
+                newIndex = max - (Math.abs(newIndex) % max);
             }
 
-            var page = Math.floor(newIndex / this.settings.panelCount);
-            var index = newIndex - (page * this.settings.panelCount);
-            var selected = new Drum.PanelModel(index, newIndex, this.settings);
-            this._update(selected);
-            this.settings.rotation = index * this.settings.theta;
-            this._transform(false);
+            this.index = newIndex;
+            this.updateDisplay();
         }
 
         , getIndex: function(){
-            return this._getSelected()?this._getSelected().dataModel.index:null;
+            return this.index;
         }
 
-        , updateItems: function(data){
-            this.element.parentNode.removeChild(this.wrapper);
-            this.settings.data = data;
+        , updateDisplay: function(){
+            var items = this._getVisibleItems(this.index);
+            var wedges = this.drum.children;
+            var wedgesLength = wedges.length;
 
-            return new Drum(this.element, this.settings);
+            for (var i = 0; i < wedgesLength; i++){
+                this._updateDrumItem(wedges[i], items[i]);
+            }
         }
 
         , _mergeSettings: function(options){
             options = options || {};
             var settings = {
-                transformProp: this._getTransformProperty(),
-                panelCount: 16,
+                radius: 75,
+                wedgeHeight: 30,
                 rotateFn: 'rotateX',
                 interactive: true,
                 dial_w: 20,
                 dial_h: 5,
                 dial_stroke_color: '#999999',
                 dial_stroke_width: 1,
-                initselect: undefined,
-                mapping: []
+                index: this.element.selectedIndex
             };
 
             var key;
@@ -69,20 +69,25 @@
                 }
             }
 
-            settings.rotation = 0;
-            settings.distance = 0;
-            settings.last_angle = 0;
-            settings.theta = 360 / settings.panelCount;
-            settings.initselect = settings.initselect || this.element.selectedIndex;
-
-            if (!settings.data){
-                settings.data = [];
-                for (var i = 0; i < this.element.children.length; i++){
-                    settings.data.push(this.element.children[i].textContent);
-                }
+            settings.data = settings.data || this._getDataFromChildren();
+            if (typeof settings.index !== 'number'){
+                settings.index = 0;
             }
 
             return settings;
+        }
+
+        , _getDataFromChildren: function(){
+            var data = [];
+            for (var i = 0; i < this.element.children.length; i++){
+                var child = this.element.children[i];
+                data.push({
+                    value: child
+                    , label: child.textContent
+                });
+            }
+
+            return data;
         }
 
         , _getTransformProperty: function(){
@@ -133,116 +138,86 @@
             }
 
             this.element.parentNode.insertBefore(wrapper, this.element.nextSibling);
-        }
 
-        , _renderData: function(){
-            var c, i;
-            for (i = 0, c = 0; i < this.settings.panelCount; i++){
-                if (this.settings.data.length === i){
-                    break;
-                }
-
-                var j = c;
-                if (c >= (this.settings.panelCount / 2)){
-                    j = this.settings.data.length - (this.settings.panelCount - c);
-                }
-                c++;
-
-                var panel = new Drum.PanelModel(i, j, this.settings);
-                panel.init();
-                this.settings.mapping.push(panel);
-
-                this.drum.appendChild(panel.elem);
-            }
-        }
-
-        , _getNearest: function(deg){
-            deg = deg || this.settings.rotation;
-            var th = (this.settings.theta / 2);
-            var n = 360;
-            var angle = ((deg + th) % n + n) % n;
-            angle = angle - angle % this.settings.theta;
-            var l = (this.settings.data.length - 1) * this.settings.theta;
-            if (angle > l){
-                if (deg > 0){
-                    return l;
-                } else {
-                    return 0;
-                }
-            }
-            return angle;
-        }
-
-        , _getSelected: function(){
-            var nearest = this._getNearest();
-            for (var i in this.settings.mapping){
-                if (this.settings.mapping[i].angle === nearest){
-                    return this.settings.mapping[i];
-                }
+            var totalWedges = this._calculateTotalWedges();
+            for (var wedgeCounter = 0; wedgeCounter < totalWedges; wedgeCounter++){
+                var wedge = document.createElement('div');
+                wedge.classList.add('drum-item');
+                drum.appendChild(wedge);
             }
 
-            return -1;
+            this._applyTransformations();
         }
 
-        , _update: function(selected){
-            var c, list = [],
-                pc = this.settings.panelCount,
-                ph = this.settings.panelCount / 2,
-                l = this.settings.data.length;
-            var i = selected.index;
-            var j = selected.dataModel.index;
-            for (var k = j - ph; k <= j + ph - 1; k++){
-                c = k;
-                if (k < 0){
-                    c = l + k;
-                }
-                if (k > l - 1){
-                    c = k - l;
-                }
-                list.push(c);
-            }
-            var t = list.slice(ph - i);
-            list = t.concat(list.slice(0, pc - t.length));
+        , _calculateTotalWedges: function(){
+            var radius = this.settings.radius;
+            var height = this.settings.wedgeHeight;
+            var total = 2 * Math.PI / (height / radius);
 
-            for (i = 0; i < this.settings.mapping.length; i++){
-                this.settings.mapping[i].update(list[i]);
-            }
+            return Math.max(1, Math.floor(total));
         }
 
-        , _getTransformCss: function(radius, fn, degree){
+        , _getVisibleItems: function(selectedIndex){
+            var i;
+            var items = [];
+            var count = this.drum.children.length;
+            var midpoint = Math.floor(count/2);
+
+            for (i = 0; i < midpoint; i++){
+                items.push(this._getItem(i + selectedIndex));
+            }
+            for (i = midpoint; i > 0; i--){
+                items.push(this._getItem(selectedIndex - i));
+            }
+
+            return items;
+        }
+
+        , _getItem: function(index){
+            var len = this.settings.data.length;
+
+            if (index < 0){
+                index = len + index;
+            } else if (index >= len){
+                index -= len;
+            }
+
+            return this.settings.data[index];
+        }
+
+        , _updateDrumItem: function(drumItem, item){
+            drumItem.textContent = item.label;
+        }
+
+        , _getDrumTransformation: function(radius, fn, degree){
             return 'translateZ(-' + radius + 'px) ' + fn + '(' + degree + 'deg)';
         }
 
-        , _transform: function(fire_event){
-            this.drum.style[this.settings.transformProp] = this._getTransformCss(
+        , _getItemTransformation: function(radius, fn, degree){
+            return fn + '(' + degree + 'deg) translateZ(-' + radius + 'px) ';
+        }
+
+        , _applyTransformations: function(){
+            this.drum.style[this.transformProp] = this._getDrumTransformation(
                 this.settings.radius
                 , this.settings.rotateFn
-                , this.settings.rotation
+                , 0
             );
 
-            var selected = this._getSelected();
-            if (selected){
-                var data = selected.dataModel;
-
-                var last_index = this.element.selectedIndex;
-                this.element.selectedIndex = data.index;
-
-                if (fire_event && last_index !== data.index && this.settings.onChange){
-                    this.settings.onChange(data.index);
-                }
-
-                var figures = this.drum.querySelectorAll("figure");
-                for (var i = 0; i < figures.length; i++){
-                    figures[i].classList.remove('active');
-                }
-
-                selected.elem.classList.add('active');
-
-                if (selected.angle !== this.settings.last_angle && [0, 90, 180, 270].indexOf(selected.angle) >= 0){
-                    this.settings.last_angle = selected.angle;
-                    this._update(selected);
-                }
+            var length = this.drum.children.length;
+            var theta = 360 / length;
+            for (var panelCounter = 0; panelCounter < length; panelCounter++){
+                var panel = this.drum.children[panelCounter];
+                panel.style[this.transformProp] = this._getItemTransformation(
+                    this.settings.radius
+                    , this.settings.rotateFn
+                    , panelCounter * theta
+                );
             }
+        }
+
+        , _transform: function(fire_event){
+            //this._applyTransform(this.drum, this.settings.rotation);
         }
 
         , _configureHammer: function(){
@@ -316,15 +291,11 @@
 
         , _configureEvents: function(){
             this.dialUp.addEventListener("click", (function(){
-                var deg = this.settings.rotation + this.settings.theta + 1;
-                this.settings.rotation = this._getNearest(deg);
-                this._transform(true);
+                this.setIndex(this.getIndex() - 1);
             }).bind(this));
 
             this.dialDown.addEventListener("click", (function(){
-                var deg = this.settings.rotation - this.settings.theta - 1;
-                this.settings.rotation = this._getNearest(deg);
-                this._transform(true);
+                this.setIndex(this.getIndex() + 1);
             }).bind(this));
 
             this.wrapper.addEventListener("mouseover", (function(){

@@ -58,7 +58,7 @@
     }
   }
 
-  .container, figure {
+  .container, .drum-item {
     height: 25px;
     line-height: 25px;
   }
@@ -92,7 +92,7 @@
   -o-transform-style: preserve-3d;
   transform-style: preserve-3d;
 
-  figure {
+  .drum-item {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;

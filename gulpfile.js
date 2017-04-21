@@ -16,7 +16,7 @@ gulp.task('drum.js', function(){
     var files = [
         'src/js/Drum.js'
         , 'src/js/DrumIcon.js'
-        , 'src/js/PanelModel.js'
+        , 'src/js/DrumItem.js'
     ];
 
     return gulp.src(files)
