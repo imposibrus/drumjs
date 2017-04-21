@@ -268,6 +268,11 @@
                 this.dialUp.style.display = "none";
                 this.dialDown.style.display = "none";
             }).bind(this));
+
+            this.wrapper.addEventListener('wheel', (function(e){
+                var newIndex = this.index + (e.wheelDelta < 0?-1:1);
+                this.setIndex(newIndex);
+            }).bind(this));
         }
     };
 
