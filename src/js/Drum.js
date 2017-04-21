@@ -11,11 +11,13 @@
         this.transformProp = this._getTransformProperty();
         this._render();
 
-        if (typeof Hammer !== 'undefined'){
-            this._configureHammer();
-        }
+
         if (this.settings.interactive){
-            this._configureEvents();
+            if (typeof Hammer !== 'undefined'){
+                this._configureHammer();
+            } else {
+                this._configureEvents();
+            }
         }
 
         this.setIndex(this.settings.index);
