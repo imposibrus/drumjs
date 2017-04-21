@@ -29,7 +29,8 @@
     display: none;
     cursor: default; }
     .drum-wrapper .dial svg {
-      position: absolute; }
+      position: absolute;
+      left: 50%; }
   .drum-wrapper .up, .drum-wrapper .up svg {
     top: 0; }
   .drum-wrapper .down, .drum-wrapper .down svg {
