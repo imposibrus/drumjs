@@ -38,6 +38,7 @@
 
             this.index = newIndex;
             this.updateDisplay();
+            this._sync();
         }
 
         , getIndex: function(){
@@ -278,6 +279,17 @@
                 var newIndex = this.index + (e.wheelDelta < 0?-1:1);
                 this.setIndex(newIndex);
             }).bind(this));
+        }
+
+        , _sync: function(){
+            var selected = this._getItem(this.index);
+            var value = selected.value;
+
+            if (value instanceof HTMLOptionElement){
+                value.selected = true;
+            } else if (value instanceof HTMLElement){
+                value.classList.add('selected');
+            }
         }
     };
 
