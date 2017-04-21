@@ -81,6 +81,15 @@
     width: 100%;
     text-align: left; }
 
+.drum-wrapper.touch-disabled:hover .dial, .drum-wrapper.touch-disabled:hover svg {
+  display: block; }
+
+.drum-wrapper.touch-enabled svg {
+  display: none; }
+
+.drum-wrapper.touch-enabled.rotating .dial {
+  display: block; }
+
 .dial.up {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&0.9+0,0.8+50,0.7+85,0+100 */
   background: -moz-linear-gradient(top, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0.7) 85%, rgba(255, 255, 255, 0) 100%);

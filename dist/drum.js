@@ -125,6 +125,9 @@
             this.element.style.display = "none";
             this.wrapper = wrapper = document.createElement("div");
             wrapper.classList.add("drum-wrapper");
+            if (this.settings.interactive){
+                wrapper.classList.add(isTouch?'touch-enabled':'touch-disabled');
+            }
 
             if (this.settings.id){
                 wrapper.setAttribute('id', this.settings.id);
@@ -255,14 +258,19 @@
             var manager = new Hammer.Manager(this.drum);
             manager.add(pan);
 
-            manager.on('pan', (function(e){
+            manager.on('pan panstart panend', (function(e){
                 var theta = e.deltaY / this.settings.radius;
                 theta = (theta * 180) / Math.PI;
                 this._rotateDrum(theta);
-                if (e.isFinal){
+
+                console.log(e.type);
+                if (e.type === 'panstart'){
+                    this.wrapper.classList.add('rotating');
+                } else if (e.type === 'panend'){
                     var wedges = -Math.round(e.deltaY / this.settings.wedgeHeight);
                     this.setIndex(this.index + wedges);
                     this._rotateDrum(0);
+                    this.wrapper.classList.remove('rotating');
                 }
             }).bind(this));
         }
@@ -274,16 +282,6 @@
 
             this.dialDown.addEventListener("click", (function(){
                 this.setIndex(this.getIndex() + 1);
-            }).bind(this));
-
-            this.wrapper.addEventListener("mouseover", (function(){
-                this.dialUp.style.display = "block";
-                this.dialDown.style.display = "block";
-            }).bind(this));
-
-            this.wrapper.addEventListener("mouseout", (function(){
-                this.dialUp.style.display = "none";
-                this.dialDown.style.display = "none";
             }).bind(this));
 
             this.wrapper.addEventListener('wheel', (function(e){
