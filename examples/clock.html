@@ -10,38 +10,13 @@
     <script src="../dist/drum.js"></script>
 
     <style media="screen">
-        body {
-            background-color: #fefefe;
-            font-family: Arial, Verdana, sans-serif;
-        }
 
-        div.drum-wrapper {
+        .drum-wrapper {
             float: left;
         }
 
-        div.drum {
-            transition-duration: 0.2s;
-            -webkit-transition-duration: 0.2s;
-        }
-
-        div.drum figure {
-            text-align: left;
-        }
-
-        #drum_date {
+        #drum_date, #drum_month {
             width: 40px;
-        }
-
-        #drum_hours, #drum_minutes, #drum_seconds {
-            width: 30px;
-        }
-
-        #drum_date figure, #drum_hours figure, #drum_minutes figure, #drum_seconds figure {
-            text-align: right;
-        }
-
-        #drum_month {
-            width: 90px;
         }
 
         #drum_fullYear {
@@ -49,50 +24,59 @@
             margin-right: 10px;
         }
 
-        div.date-wrapper {
-            width: 300px;
+        #drum_hours, #drum_minutes, #drum_seconds {
+            width: 30px;
         }
 
-        div.date-wrapper form .lines {
+        #drum_date .drum-item, #drum_hours .drum-item, #drum_minutes .drum-item, #drum_seconds .drum-item {
+            text-align: right;
+        }
+
+        div.date-wrapper {
+            width: 300px;
+            position: relative;
+        }
+
+        .date-wrapper .lines {
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
             box-sizing: border-box;
             border-top: solid 1px #CCC;
             border-bottom: solid 1px #CCC;
             position: absolute;
-            top: 49px;
-            left: 0px;
+            top: 47px;
+            left: 0;
             width: 100%;
             height: 23px;
         }
 
-        div.date-wrapper form {
-            position: relative;
-        }
-
-        div.date-wrapper form .lines div {
+        .lines div {
             display: inline;
             line-height: 20px;
+            font-weight: bold;
         }
 
-        div.date-wrapper form .lines div.h {
-            margin-left: 221px;
+        .lines div.h {
+            margin-left: 170px;
         }
 
-        div.date-wrapper form .lines div.m {
-            margin-left: 22px;
+        .lines div.m {
+            margin-left: 20px;
         }
     </style>
 
     <script type="text/javascript">
         function getIndexForValue(elem, value){
-            for (var i = 0; i < elem.options.length; i++)
-                if (elem.options[i].value == value){
+            for (var i = 0; i < elem.options.length; i++){
+                if (elem.options[i].value === value.toString()){
                     return i;
                 }
+            }
+
+            return 0;
         }
 
-        $(document).ready(function(){
+        jQuery(function($){
             $("select.date").each(function(idx, ele){
                 $(ele).data('drum', new Drum(ele, {
                     interactive: false
@@ -178,13 +162,13 @@
             <option value="11">December</option>
         </select>
         <select class="date" id="fullYear" name="fullYear">
-            <option value="2011">2011</option>
-            <option value="2012">2012</option>
-            <option value="2013">2013</option>
             <option value="2014">2014</option>
             <option value="2015">2015</option>
             <option value="2016">2016</option>
             <option value="2017">2017</option>
+            <option value="2017">2018</option>
+            <option value="2017">2019</option>
+            <option value="2017">2020</option>
         </select>
         <select class="date" id="hours" name="hours">
             <option value="0">00</option>

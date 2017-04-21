@@ -1,292 +1,321 @@
 <html>
 <head>
-	<meta charset='utf-8'>
-	<meta id="viewport" name="viewport" content ="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />	
-	<title>DateTime Test</title>
-	<link rel="stylesheet" href="../dist/drum.css">
-	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-	<script src="../dist/drum.js"></script>
-	<style media="screen">
-		body {
-			background-color: #fefefe;
-			font-family: Arial,Verdana,sans-serif;
-		}
-		div.date_wrapper {
-			width: 265px;
-		}
-		div.date_wrapper .date_header {
-			height: 25px;
-			font-weight: 400;
-			border-bottom: 1px solid #CCC;
-			margin-bottom: 10px;
-		}
-		div.date_wrapper .date_header span.title {
-			float: left;
-			text-align: left;
-		}
-		div.date_wrapper .date_header span.selection {
-			float: right;
-			text-align: right;
-			color: #CE0000;
-		}
+    <meta charset='utf-8'>
+    <meta id="viewport" name="viewport"
+          content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>DateTime Test</title>
+    <link rel="stylesheet" href="../dist/drum.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="../dist/drum.js"></script>
+    <style media="screen">
+        div.date_wrapper {
+            width: 265px;
+        }
 
-		div.date_wrapper form {
-			position: relative;
-		}
-		div.date_wrapper .lines {
-			-webkit-box-sizing: border-box;
-			-moz-box-sizing: border-box;
-			box-sizing: border-box;  
-			border-top: solid 1px #CCC;
-			border-bottom: solid 1px #CCC;
-			position: absolute;
-			top: 58px;
-			left: 0px;
-			width: 100%;
-			height: 24px;
-		}
-		div.date_wrapper .lines div {
-			margin-left: 220px;
-			line-height: 21px;
-		}		
+        div.date_wrapper .date_header {
+            height: 25px;
+            font-weight: 400;
+            border-bottom: 1px solid #CCC;
+            margin-bottom: 10px;
+        }
 
-		div.drum-wrapper {
-			float: left;
-		}
-		div.drum figure {
-			text-align: left;
-		}
-		#drum_hours figure, 
-		#drum_date figure {
-			text-align: right;
-		}
-		#drum_date, #drum_to_date {
-			margin-left: 10px;
-			margin-right: 5px;
-		}
-		#drum_date,
-		#drum_hours, 
-		#drum_minutes {
-			width: 30px;
-		}
-		#drum_hours {
-			margin-left: 10px;
-		}
-		#drum_minutes {
-			margin-left: 4px;
-		}
-		#drum_month {
-			width: 90px;
-		}
-		#drum_fullYear {
-			width: 45px;
-		}
-		#drum_hours .dial div {
-			margin: 0 7px;
-		}
-		#drum_minutes .dial div {
-			margin: 0 2px;
-		}
-	</style>
-	<script>
-		function getIndexForValue(elem, value) {
-			for (var i=0; i<elem.options.length; i++)
-				if (elem.options[i].value === value)
-					return i;
-		}
+        div.date_wrapper .date_header span.title {
+            float: left;
+            text-align: left;
+        }
 
-		function pad(number) {
-			if ( number < 10 ) {
-				return '0' + number;
-			}
-			return number;
-		}
+        div.date_wrapper .date_header span.selection {
+            float: right;
+            text-align: right;
+            color: #CE0000;
+        }
 
-		function update(datetime) {
-			$("#date").data('drum').setIndex(datetime.getDate()-1);
-			$("#month").data('drum').setIndex(datetime.getMonth());
-			$("#fullYear").data('drum').setIndex(getIndexForValue($("#fullYear")[0], datetime.getFullYear()));
-			$("#hours").data('drum').setIndex(datetime.getHours());
-			$("#minutes").data('drum').setIndex(datetime.getMinutes());
-		}
+        div.date_wrapper form {
+            position: relative;
+        }
 
-		$(document).ready(function () {
-			$("select.date").each(function(idx,ele){
-			    $(ele).data('drum', new Drum(ele, {
-                    onChange : function (elem) {
-                        var arr = {'date' : 'setDate', 'month' : 'setMonth', 'fullYear' : 'setFullYear', 'hours' : 'setHours', 'minutes' : 'setMinutes'};
+        div.date_wrapper .lines {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            border-top: solid 1px #CCC;
+            border-bottom: solid 1px #CCC;
+            position: absolute;
+            top: 58px;
+            left: 0;
+            width: 100%;
+            height: 24px;
+        }
+
+        div.date_wrapper .lines div {
+            margin-left: 220px;
+            line-height: 21px;
+        }
+
+        div.drum-wrapper {
+            float: left;
+        }
+
+        div.drum figure {
+            text-align: left;
+        }
+
+        #drum_hours figure,
+        #drum_date figure {
+            text-align: right;
+        }
+
+        #drum_date, #drum_to_date {
+            margin-left: 10px;
+            margin-right: 5px;
+        }
+
+        #drum_date,
+        #drum_hours,
+        #drum_minutes {
+            width: 30px;
+        }
+
+        #drum_hours {
+            margin-left: 10px;
+        }
+
+        #drum_minutes {
+            margin-left: 4px;
+        }
+
+        #drum_month {
+            width: 90px;
+        }
+
+        #drum_fullYear {
+            width: 45px;
+        }
+
+        #drum_hours .dial div {
+            margin: 0 7px;
+        }
+
+        #drum_minutes .dial div {
+            margin: 0 2px;
+        }
+    </style>
+    <script>
+        function getIndexForValue(elem, value){
+            for (var i = 0; i < elem.options.length; i++){
+                if (elem.options[i].value === value.toString()){
+                    return i;
+                }
+            }
+        }
+
+        function pad(number){
+            if (number < 10){
+                return '0' + number;
+            }
+            return number;
+        }
+
+        jQuery(function($){
+            var $date = $("#date");
+            var $month = $("#month");
+            var $fullYear = $("#fullYear");
+            var $hours = $("#hours");
+            var $minutes = $("#minutes");
+
+            function update(datetime){
+                $date.data('drum').setIndex(datetime.getDate() - 1, false);
+                $month.data('drum').setIndex(datetime.getMonth(), false);
+                $fullYear.data('drum').setIndex(getIndexForValue($fullYear[0], datetime.getFullYear()), false);
+                $hours.data('drum').setIndex(datetime.getHours(), false);
+                $minutes.data('drum').setIndex(datetime.getMinutes(), false);
+            }
+
+            $("select.date").each(function(idx, ele){
+                $(ele).data('drum', new Drum(ele, {
+                    onChange: function(){
+                        var arr = {
+                            'date': 'setDate',
+                            'month': 'setMonth',
+                            'fullYear': 'setFullYear',
+                            'hours': 'setHours',
+                            'minutes': 'setMinutes'
+                        };
                         var date = new Date();
-                        for (var s in arr) {
+                        for (var s in arr){
                             var i = ($("form[name='date'] select[name='" + s + "']"))[0].value;
-                            eval ("date." + arr[s] + "(" + i + ")");
+                            date[arr[s]](i);
                         }
                         date.setSeconds(0);
                         update(date);
 
-                        var format = date.getFullYear() + '-' + pad( date.getMonth() + 1 ) + '-' + pad( date.getDate() ) + ' ' + pad( date.getHours() ) + ':' + pad( date.getMinutes() );
+                        var format = date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate()) + ' ' + pad(
+                                date.getHours()) + ':' + pad(date.getMinutes());
 
                         $('.date_header .selection').html(format);
                     }
                 }));
             });
-			update(new Date());
-		});
-	</script>
+            update(new Date());
+        });
+    </script>
 </head>
 <body>
 <h1>DrumJS Datetime Picker</h1>
 <div class="date_wrapper outside">
-	<div class="date_header">
-		<span class="title">Date Time:</span>
-		<span class="selection"></span>
-	</div>
-	<form name="date">
-		<div class="lines"><div>:</div></div>
-		<select class="date" id="date" name="date">
-			<option value="1">1.</option>
-			<option value="2">2.</option>
-			<option value="3">3.</option>
-			<option value="4">4.</option>
-			<option value="5">5.</option>
-			<option value="6">6.</option>
-			<option value="7">7.</option>
-			<option value="8">8.</option>
-			<option value="9">9.</option>
-			<option value="10">10.</option>
-			<option value="11">11.</option>
-			<option value="12">12.</option>
-			<option value="13">13.</option>
-			<option value="14">14.</option>
-			<option value="15">15.</option>
-			<option value="16">16.</option>
-			<option value="17">17.</option>
-			<option value="18">18.</option>
-			<option value="19">19.</option>
-			<option value="20">20.</option>
-			<option value="21">21.</option>
-			<option value="22">22.</option>
-			<option value="23">23.</option>
-			<option value="24">24.</option>
-			<option value="25">25.</option>
-			<option value="26">26.</option>
-			<option value="27">27.</option>
-			<option value="28">28.</option>
-			<option value="29">29.</option>
-			<option value="30">30.</option>
-			<option value="31">31.</option>
-		</select>
-		<select class="date" id="month" name="month">
-			<option value="0">January</option>
-			<option value="1">February</option>
-			<option value="2">March</option>
-			<option value="3">April</option>
-			<option value="4">May</option>
-			<option value="5">June</option>
-			<option value="6">July</option>
-			<option value="7">August</option>
-			<option value="8">September</option>
-			<option value="9">October</option>
-			<option value="10">November</option>
-			<option value="11">December</option>
-		</select>
-		<select class="date" id="fullYear" name="fullYear">
-			<option value="2011">2011</option>
-			<option value="2012">2012</option>
-			<option value="2013">2013</option>
-			<option value="2014">2014</option>
-			<option value="2015">2015</option>
-			<option value="2016">2016</option>
-			<option value="2017">2017</option>
-		</select>
-		<select class="date" id="hours" name="hours">
-			<option value="0">00</option>
-			<option value="1">01</option>
-			<option value="2">02</option>
-			<option value="3">03</option>
-			<option value="4">04</option>
-			<option value="5">05</option>
-			<option value="6">06</option>
-			<option value="7">07</option>
-			<option value="8">08</option>
-			<option value="9">09</option>
-			<option value="10">10</option>
-			<option value="11">11</option>
-			<option value="12">12</option>
-			<option value="13">13</option>
-			<option value="14">14</option>
-			<option value="15">15</option>
-			<option value="16">16</option>
-			<option value="17">17</option>
-			<option value="18">18</option>
-			<option value="19">19</option>
-			<option value="20">20</option>
-			<option value="21">21</option>
-			<option value="22">22</option>
-			<option value="23">23</option>
-		</select>
-		<select class="date" id="minutes" name="minutes">
-			<option value="0">00</option>
-			<option value="1">01</option>
-			<option value="2">02</option>
-			<option value="3">03</option>
-			<option value="4">04</option>
-			<option value="5">05</option>
-			<option value="6">06</option>
-			<option value="7">07</option>
-			<option value="8">08</option>
-			<option value="9">09</option>
-			<option value="10">10</option>
-			<option value="11">11</option>
-			<option value="12">12</option>
-			<option value="13">13</option>
-			<option value="14">14</option>
-			<option value="15">15</option>
-			<option value="16">16</option>
-			<option value="17">17</option>
-			<option value="18">18</option>
-			<option value="19">19</option>
-			<option value="20">20</option>
-			<option value="21">21</option>
-			<option value="22">22</option>
-			<option value="23">23</option>
-			<option value="24">24</option>
-			<option value="25">25</option>
-			<option value="26">26</option>
-			<option value="27">27</option>
-			<option value="28">28</option>
-			<option value="29">29</option>
-			<option value="30">30</option>
-			<option value="31">31</option>
-			<option value="32">32</option>
-			<option value="33">33</option>
-			<option value="34">34</option>
-			<option value="35">35</option>
-			<option value="36">36</option>
-			<option value="37">37</option>
-			<option value="38">38</option>
-			<option value="39">39</option>
-			<option value="40">40</option>
-			<option value="41">41</option>
-			<option value="42">42</option>
-			<option value="43">43</option>
-			<option value="44">44</option>
-			<option value="45">45</option>
-			<option value="46">46</option>
-			<option value="47">47</option>
-			<option value="48">48</option>
-			<option value="49">49</option>
-			<option value="50">50</option>
-			<option value="51">51</option>
-			<option value="52">52</option>
-			<option value="53">53</option>
-			<option value="54">54</option>
-			<option value="55">55</option>
-			<option value="56">56</option>
-			<option value="57">57</option>
-			<option value="58">48</option>
-			<option value="59">59</option>
-		</select>
-	</form>
+    <div class="date_header">
+        <span class="title">Date Time:</span>
+        <span class="selection"></span>
+    </div>
+    <form name="date">
+        <div class="lines">
+            <div>:</div>
+        </div>
+        <select class="date" id="date" name="date">
+            <option value="1">1.</option>
+            <option value="2">2.</option>
+            <option value="3">3.</option>
+            <option value="4">4.</option>
+            <option value="5">5.</option>
+            <option value="6">6.</option>
+            <option value="7">7.</option>
+            <option value="8">8.</option>
+            <option value="9">9.</option>
+            <option value="10">10.</option>
+            <option value="11">11.</option>
+            <option value="12">12.</option>
+            <option value="13">13.</option>
+            <option value="14">14.</option>
+            <option value="15">15.</option>
+            <option value="16">16.</option>
+            <option value="17">17.</option>
+            <option value="18">18.</option>
+            <option value="19">19.</option>
+            <option value="20">20.</option>
+            <option value="21">21.</option>
+            <option value="22">22.</option>
+            <option value="23">23.</option>
+            <option value="24">24.</option>
+            <option value="25">25.</option>
+            <option value="26">26.</option>
+            <option value="27">27.</option>
+            <option value="28">28.</option>
+            <option value="29">29.</option>
+            <option value="30">30.</option>
+            <option value="31">31.</option>
+        </select>
+        <select class="date" id="month" name="month">
+            <option value="0">January</option>
+            <option value="1">February</option>
+            <option value="2">March</option>
+            <option value="3">April</option>
+            <option value="4">May</option>
+            <option value="5">June</option>
+            <option value="6">July</option>
+            <option value="7">August</option>
+            <option value="8">September</option>
+            <option value="9">October</option>
+            <option value="10">November</option>
+            <option value="11">December</option>
+        </select>
+        <select class="date" id="fullYear" name="fullYear">
+            <option value="2011">2011</option>
+            <option value="2012">2012</option>
+            <option value="2013">2013</option>
+            <option value="2014">2014</option>
+            <option value="2015">2015</option>
+            <option value="2016">2016</option>
+            <option value="2017">2017</option>
+        </select>
+        <select class="date" id="hours" name="hours">
+            <option value="0">00</option>
+            <option value="1">01</option>
+            <option value="2">02</option>
+            <option value="3">03</option>
+            <option value="4">04</option>
+            <option value="5">05</option>
+            <option value="6">06</option>
+            <option value="7">07</option>
+            <option value="8">08</option>
+            <option value="9">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+        </select>
+        <select class="date" id="minutes" name="minutes">
+            <option value="0">00</option>
+            <option value="1">01</option>
+            <option value="2">02</option>
+            <option value="3">03</option>
+            <option value="4">04</option>
+            <option value="5">05</option>
+            <option value="6">06</option>
+            <option value="7">07</option>
+            <option value="8">08</option>
+            <option value="9">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="26">26</option>
+            <option value="27">27</option>
+            <option value="28">28</option>
+            <option value="29">29</option>
+            <option value="30">30</option>
+            <option value="31">31</option>
+            <option value="32">32</option>
+            <option value="33">33</option>
+            <option value="34">34</option>
+            <option value="35">35</option>
+            <option value="36">36</option>
+            <option value="37">37</option>
+            <option value="38">38</option>
+            <option value="39">39</option>
+            <option value="40">40</option>
+            <option value="41">41</option>
+            <option value="42">42</option>
+            <option value="43">43</option>
+            <option value="44">44</option>
+            <option value="45">45</option>
+            <option value="46">46</option>
+            <option value="47">47</option>
+            <option value="48">48</option>
+            <option value="49">49</option>
+            <option value="50">50</option>
+            <option value="51">51</option>
+            <option value="52">52</option>
+            <option value="53">53</option>
+            <option value="54">54</option>
+            <option value="55">55</option>
+            <option value="56">56</option>
+            <option value="57">57</option>
+            <option value="58">48</option>
+            <option value="59">59</option>
+        </select>
+    </form>
 </div>
 </body>
 </html>
