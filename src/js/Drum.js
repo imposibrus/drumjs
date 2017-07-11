@@ -4,7 +4,15 @@
  * Licensed under the MIT license
  */
 
-(function(){
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define([], factory);
+    } else {
+        // Browser globals
+        root.Drum = factory();
+    }
+}(this, function () {
     // From http://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
     var isTouch = (('ontouchstart' in window) || (navigator.msMaxTouchPoints > 0));
 
@@ -324,5 +332,100 @@
         }
     };
 
-    this.Drum = Drum;
-}());
+    function DrumButton(width, height){
+        this._createSVGCanvas(width, height);
+    }
+
+    DrumButton.prototype = {
+        getElement: function(){
+            return this.element;
+        }
+
+        , line: function(p1, p2, color, thickness, cap){
+            var line = this._createSVGElement('line');
+            line.setAttribute('stroke', color);
+            line.setAttribute('stroke-width', thickness);
+            line.setAttribute('stroke-linecap', cap);
+
+            line.setAttribute('x1', p1.x);
+            line.setAttribute('y1', p1.y);
+
+            line.setAttribute('x2', p2.x);
+            line.setAttribute('y2', p2.y);
+
+            this.graphics.appendChild(line);
+        }
+
+        , _createSVGElement: function(name){
+            return document.createElementNS("http://www.w3.org/2000/svg", name);
+        }
+
+        , _createSVGCanvas: function(width, height){
+            this.element = this._createSVGElement("svg");
+            this.element.setAttribute("width", width);
+            this.element.setAttribute("height", height);
+
+            this.graphics = this._createSVGElement("g");
+            this.element.appendChild(this.graphics);
+        }
+    };
+
+
+    Drum.DownButton = function(width, height, color, thickness){
+        var lowerCenter = {
+            x: width / 2
+            , y: height - thickness
+        };
+
+        var upperRight = {
+            x: width
+            , y: thickness
+        };
+
+        var upperLeft = {
+            x: thickness
+            , y: thickness
+        };
+
+        var button = new DrumButton(width, height);
+        button.line(upperLeft, lowerCenter, color, thickness, 'round');
+        button.line(lowerCenter, upperRight, color, thickness, 'round');
+
+        var div = document.createElement('div');
+        div.classList.add('dial');
+        div.classList.add('down');
+        div.appendChild(button.getElement());
+
+        return div;
+    };
+
+    Drum.UpButton = function(width, height, color, thickness){
+        var upperCenter = {
+            x: width / 2
+            , y: thickness
+        };
+
+        var lowerRight = {
+            x: width
+            , y: height - thickness
+        };
+
+        var lowerLeft = {
+            x: thickness
+            , y: height - thickness
+        };
+
+        var button = new DrumButton(width, height);
+        button.line(lowerLeft, upperCenter, color, thickness, 'round');
+        button.line(upperCenter, lowerRight, color, thickness, 'round');
+
+        var div = document.createElement('div');
+        div.classList.add('dial');
+        div.classList.add('up');
+        div.appendChild(button.getElement());
+
+        return div;
+    };
+
+    return Drum;
+}));

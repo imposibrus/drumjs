@@ -2,7 +2,6 @@
  * Created by Keith on 4/19/2017.
  */
 var gulp = require('gulp');
-var concat = require('gulp-concat');
 var sass = require('gulp-sass');
 var uglifyjs = require('gulp-uglify');
 var uglifycss = require('gulp-uglifycss');
@@ -11,18 +10,6 @@ var rename = require('gulp-rename');
 function logError(e){
     console.log(e.cause);
 }
-
-gulp.task('drum.js', function(){
-    var files = [
-        'src/js/Drum.js'
-        , 'src/js/DrumButton.js'
-    ];
-
-    return gulp.src(files)
-        .pipe(concat('drum.js'))
-        .pipe(gulp.dest('dist'))
-        ;
-});
 
 gulp.task('drum.css', function(){
     var files = [
