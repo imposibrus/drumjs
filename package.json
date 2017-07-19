@@ -1,6 +1,6 @@
 {
   "name": "drumjs",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "A port of drumjs library",
   "main": "src/js/Drum.js",
   "directories": {
